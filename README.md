@@ -1,4 +1,4 @@
-# MAP3270-V3.2.0
+# MAP3270-V3.2.2
 Full install (including source code) for MVS 38j systems running Hercules 
 TK3, TK4- or TK5 systems.There is an optional update at the end of this document for running MAP3270 on Z/OS
 
@@ -13,6 +13,15 @@ All the other datasets have the high level qualifier ‘MAP3270.’
 No version of MAP3270 is pre-installed on distributions of TK3.
 As of this writing, MAP3270 V3.x.x is installed on TK5.
 
+Summary of changes
+==================
+V3.1.0 introduced the TABLE and BOUNDS to the screen compiler.
+V3.2.0 introduced the ability of the application program to alter some of the attributes in the data stream.
+V3.2.1 is a bug fix.  The screen compiler incorrectly generates data fields for screen labels when TABLE is
+       used. Only the source code for MAP3270 was changed along with load modules MAP3270 and MAP32705. This
+       fix is optional if you don't use the TABLE feature.
+V3.2.2 is an installer fix.  Problems with 3350 vs 3390 DASD are dealt with on TK5 systems
+
 These instruction will create what I call a “test version”.  All the dataset are created with the 
 high level qualifier ‘userid.MAP3270’.  If you desire, the JCL can be modified to directly update 
 the TK4- pre-installation.  I recommend creating the “test” version and then copy the all the 
@@ -26,10 +35,19 @@ complete with RC= 0004.
 
 STEP 1
 ======
-Download the MAP3270-V3.2.0.zip file. Extract MAP3270-xmi file. Extract RESTTK5.jcl if you are
+Download the MAP3270-V3.2.2.zip file. Extract MAP3270-xmi file. Extract RESTTK5.jcl if you are
 using TK5.  If you want to use RECV370 or you are not using NJE38, extract RESTOTHR.jcl.
 
 STEP 2
+======
+When most transfer programs create the dataset on MVS, the default DCB is generally no good for XMI
+file.  Create a dataset (MAP3270.XMI) on MVS with RECFM=FB, LRECL=80, BLKSIZE=3120.
+
+STEP 3
+======
+Binary upload the MAP3270 xmi file to MVS dataset (MAP3270.XMI).
+
+STEP 4
 ======
 Edit RESTxxxx.JCL if you may want to change the default userid HERC01, volume TSO001 or PUB002.  
 All steps should end with RC = 0000.  
@@ -47,18 +65,10 @@ userid.MAP3270.SOURCE
 userid.MAP3270.SOURCE5
 userid.MAP3270.LOADLIB
 
-STEP 4
-======
-When restore is successfully completed, the "test" install is completed.  Option: you could
-submit userid.MAP3270.CNTL(COMPILE_) where _ is 1,2 or 3 to recompile the entire package less 
-the demo programs.
-Submit userid.MAP3270.CNTL(COMPILE4) to recompile the demo programs.
-
 STEP 5
 ======
-Refer to the MAP3270 Tutorial.pdf for additional installation steps that must be completed
-manually.  For an initial install, these manual steps must be completed.  
-For an update install, verify that the changes were made.
+When restore is successfully completed, the "test" install is completed.  Please
+refer to the $README member in the userid.MAP3270.CNTL for additional install info.
 
 
 =======================================================================
